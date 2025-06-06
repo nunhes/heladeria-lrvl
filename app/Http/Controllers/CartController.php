@@ -116,4 +116,32 @@ class CartController extends Controller
         $request->session()->put('total', $total_price);
         $request->session()->put('quantity', $total_quantity);
     }
+
+
+    function remove_from_cart(Request $request)
+    {
+        // Lógica para eliminar un produto do carrito
+        if($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart');
+            $id = $request->input('id');
+
+            /* if(array_key_exists($id, $cart)) {
+                unset($cart[$id]); // Eliminamos o produto do carrito
+                $request->session()->put('cart', $cart); // Actualizamos a sesión
+
+                $this->calculateTotalCart($request);
+            } else {
+                echo "<script>alert('O produto non está no carriño.')</script>";
+            } */
+           unset($cart[$id]); // Eliminamos o produto do carrito
+           
+           $request->session()->put('cart', $cart); // Actualizamos a sesión
+
+           $this->calculateTotalCart($request);
+
+        
+       }
+
+        return view('cart');
+    }
 }

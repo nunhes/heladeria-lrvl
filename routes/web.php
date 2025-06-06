@@ -27,7 +27,17 @@ Route::get('/service', [CartController::class, 'cart'])->name('cart');
 Route::post('/add_to_cart', [CartController::class, 'add_to_cart'])->name('add_to_cart');
 
 /** retain this URL in case the user requests an empty cart */
-Route::get('/add_to_cart', function () {
+// Route::get('/add_to_cart', function () {
+Route::get('add_to_cart', function () {
+    //return redirect()->route('home');
+    return redirect('/');
+});
+
+Route::post('/remove_from_cart', [CartController::class, 'remove_from_cart'])->name('remove_from_cart');
+
+/** retain this URL in case the user requests an empty cart */
+// Route::get('/remove_from_cart', function () {
+Route::get('remove_from_cart', function () {
     //return redirect()->route('home');
     return redirect('/');
 });
