@@ -26,7 +26,7 @@ class CartController extends Controller
 
             if(!in_array($id, $products_array_ids)) {
                 // Se o produto non está no carrito, engadímolo
-                    $id = $request->input('id');
+                    // $id = $request->input('id');
                     $name = $request->input('name');
                     $image = $request->input('image');
                     $price = $request->input('price');
@@ -64,7 +64,7 @@ class CartController extends Controller
                 $cart = array();
 
                 // engadir producto a cart
-                $id = $request->input('id');
+                    $id = $request->input('id');
                     $name = $request->input('name');
                     $image = $request->input('image');
                     $price = $request->input('price');
@@ -84,7 +84,7 @@ class CartController extends Controller
                         'quantity' => $quantity
                          );
 
-                $cart[$id] = $product_array; // Engadimos o produto ao carrito
+                $cart[$id] = $product_array; // Engadimos o produto ao carrito (erro?)
                 $request->session()->put('cart', $cart); // Actualizamos a sesión
 
                 $this->calculateTotalCart($request);
@@ -125,23 +125,49 @@ class CartController extends Controller
             $cart = $request->session()->get('cart');
             $id = $request->input('id');
 
-            /* if(array_key_exists($id, $cart)) {
-                unset($cart[$id]); // Eliminamos o produto do carrito
-                $request->session()->put('cart', $cart); // Actualizamos a sesión
-
-                $this->calculateTotalCart($request);
-            } else {
-                echo "<script>alert('O produto non está no carriño.')</script>";
-            } */
            unset($cart[$id]); // Eliminamos o produto do carrito
            
            $request->session()->put('cart', $cart); // Actualizamos a sesión
 
-           $this->calculateTotalCart($request);
-
-        
+           $this->calculateTotalCart($request);        
        }
+        return view('cart');
+    }
 
+    public function edit_product_quantity(Request $request)
+    {
+        // Lógica para editar a cantidade dun produto no carrito
+        if ($request->session()->has('cart')) {
+           
+            $product_id = $request->input('id');
+            $product_quantity = $request->input('quantity');
+            
+            if ($request->has('decrease_product_quantity_btn')){
+                // Se o botón de reducir cantidade foi premerido
+                if ($product_quantity > 1) {
+                    $product_quantity--; // Reducimos a cantidade
+                }
+            } else if ($request->has('increase_product_quantity_btn')) {
+                // Se o botón de aumentar cantidade foi premerido
+                $product_quantity++; // Aumentamos a cantidade
+            } else {
+                // Se non se premeron os botóns de aumentar ou reducir, non facemos nada
+            }
+
+            if ($product_quantity <= 0) {
+                // Se a cantidade é menor que 1, eliminamos o produto do carrito
+                $this->remove_from_cart($request);
+            }
+
+            $cart = $request->session()->get('cart');
+            if(array_key_exists($product_id, $cart)) {
+                // Actualizamos a cantidade do produto no carrito
+                $cart[$product_id]['quantity'] = $product_quantity;
+
+                $request->session()->put('cart', $cart); // Actualizamos a sesión                
+                $this->calculateTotalCart($request); // Recalculamos o total do carrito
+            }
+        }
         return view('cart');
     }
 }

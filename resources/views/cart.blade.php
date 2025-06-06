@@ -21,58 +21,67 @@
                     <p class="pl-4 text-lg font-semibold leading-none text-pink-800">{{ $product['name'] }}</p>
                 </div>
                 <div class="flex-auto w-1/6">
-                    <p>
+                    {{-- <div class="flex items-center justify-between">
                         <form method="POST" action="{{ route('remove_from_cart') }}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $product['id'] }}">
+                    <input type="submit" name="remove_btn" value="x" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </form>
+                </div> --}}
+                <p class="flex items-center text-base font-black leading-none text-right text-gray-800">
+                    <form method="POST" action="{{ route('edit_product_quantity') }}" class="flex items-center justify-between">
+                        @csrf
 
+                        <input type="submit" name="decrease_product_quantity_btn" value="-" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        <input type="hidden" name="id" value="{{ $product['id'] }}">
 
-                            <input type="submit" name="remove_btn" value="remove">
-                        </form>
-                    </p>
-                    <p class="flex items-center text-base font-black leading-none text-right text-gray-800">
-                        <form>
-                            @csrf
-
-                            <input type="submit" name="decrease_product_quantity_btn" value="-" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                            <input type="hidden" name="id" value="{{ $product['id'] }}">
-
-                            <input type="text" name="quantity" value="{{ $product['quantity'] }}" class="w-16 px-2 py-1 text-base font-semibold leading-none text-gray-800 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-500">
-                            <input type="submit" name="increase_product_quantity_btn" value="+" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                        </form>
-                        {{-- $product['quantity'] --}}
-                    </p>
-                </div>
-                <div class="flex-auto w-1/6">
-                    <p class="pr-2 text-base font-black leading-none text-right text-gray-800">
-                        {{ $product['price'] * $product['quantity'] }}&euro;</p>
-                </div>
+                        <input type="text" name="quantity" value="{{ $product['quantity'] }}" class="w-16 px-2 py-1 text-base font-semibold leading-none text-gray-800 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        <input type="submit" name="increase_product_quantity_btn" value="+" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </form>
+                    {{-- $product['quantity'] --}}
+                </p>
             </div>
-            @endforeach
-            @endif
-
-            <hr class="my-2">
-
-            @if (Session::has('cart'))
-            <div class="flex flex-row-reverse my-5">
-                <h4 class="w-2/6 pr-1 text-lg font-semibold text-right text-slate-400">Total
-                    @if (Session::has('total'))
-                    <span class="ml-2 text-pink-800">{{ Session::get('total') }}&euro;</span>
-                    @endif
-                </h4>
+            <div class="flex-auto w-1/6">
+                <p class="pr-2 text-base font-black leading-none text-right text-gray-800">
+                    {{ $product['price'] * $product['quantity'] }}&euro;</p>
             </div>
-            @endif
 
-            <div class="text-center"><button class="w-1/5 py-3 m-auto text-sm font-semibold text-pink-100 uppercase bg-pink-500 rounded-full hover:bg-pink-700">
-                    Checkout
-                </button></div>
+            <div class="flex items-center justify-between">
+                <form method="POST" action="{{ route('remove_from_cart') }}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $product['id'] }}">
+                    <input type="submit" name="remove_btn" value="x" class="px-2 py-1 text-sm font-semibold text-white uppercase bg-pink-500 rounded hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                </form>
+            </div>
 
-            <a href="/products" class="flex flex-row-reverse w-1/3 px-4 py-2 mx-auto mt-10 text-lg font-semibold text-pink-100 bg-pink-400 rounded-full hover:bg-pink-300 hover:text-pink-700">
-
-                Continue Shopping <svg class="w-4 mr-2 text-pink-100 fill-current" viewBox="0 0 448 512">
-                    <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
-                </svg>
-            </a>
         </div>
+        @endforeach
+        @endif
+
+        <hr class="my-2">
+
+        @if (Session::has('cart'))
+        <div class="flex flex-row-reverse my-5">
+            <h4 class="w-2/6 pr-1 text-lg font-semibold text-right text-slate-400">Total
+                @if (Session::has('total'))
+                <span class="ml-2 text-pink-800">{{ Session::get('total') }}&euro;</span>
+                @endif
+            </h4>
+        </div>
+        @endif
+
+        <div class="text-center"><button class="w-1/5 py-3 m-auto text-sm font-semibold text-pink-100 uppercase bg-pink-500 rounded-full hover:bg-pink-700">
+                Checkout
+            </button></div>
+
+        <a href="/products" class="flex flex-row-reverse w-1/3 px-4 py-2 mx-auto mt-10 text-lg font-semibold text-pink-100 bg-pink-400 rounded-full hover:bg-pink-300 hover:text-pink-700">
+
+            Continue Shopping <svg class="w-4 mr-2 text-pink-100 fill-current" viewBox="0 0 448 512">
+                <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
+            </svg>
+        </a>
     </div>
+</div>
 </div>
 
 
